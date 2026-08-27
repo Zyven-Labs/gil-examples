@@ -1,0 +1,23 @@
+intent grant_access(Person, Room)
+    authorized[Person, Room] <= true
+end
+
+intent revoke_access(Person, Room)
+    authorized[Person, Room] <= false
+end
+
+intent enter(Person, Room)
+    when authorized[Person, Room] do
+        inside[Person, Room] <= true
+    end
+end
+
+intent leave(Person, Room)
+    inside[Person, Room] <= false
+end
+
+intent list_occupants(Room)
+    when inside[Person, Room] do
+        occupant[Room, Person] <= true
+    end
+end

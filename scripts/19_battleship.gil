@@ -1,0 +1,24 @@
+intent place_ship(Ship, X, Y)
+    ship_at[Ship, X, Y] <= true
+end
+
+intent fire_at(X, Y)
+    shot[X, Y] <= true
+    when ship_at[S, X, Y] do
+        hit[S, X, Y] <= true
+    end
+end
+
+intent check_sunk(Ship)
+    when ship_at[Ship, X, Y] do
+        when hit[Ship, X, Y] do
+            sunk[Ship] <= true
+        end
+    end
+end
+
+intent hit_ship(X, Y)
+    when ship_at[S, X, Y] do
+        hit[S, X, Y] <= true
+    end
+end

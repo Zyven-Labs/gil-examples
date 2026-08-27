@@ -1,0 +1,13 @@
+{
+  "name": "gil-examples",
+  "version": "1.0.0",
+  "description": "20-part Gil language tutorial with interactive REPL",
+  "main": "repl.js",
+  "scripts": {
+    "repl": "node repl.js",
+    "test": "node tools/validate.js"
+  },
+  "keywords": ["gil", "gnosis-intent-language", "tutorial"],
+  "author": "",
+  "license": "MIT"
+}

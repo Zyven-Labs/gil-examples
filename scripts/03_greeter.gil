@@ -1,0 +1,7 @@
+intent greet(Person)
+    greeted[Person] <= true
+end
+
+intent farewell(Person)
+    greeted[Person] <= false
+end

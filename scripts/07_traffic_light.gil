@@ -1,0 +1,29 @@
+intent set_green()
+    green <= true
+    yellow <= false
+    red <= false
+end
+
+intent set_yellow()
+    green <= false
+    yellow <= true
+    red <= false
+end
+
+intent set_red()
+    green <= false
+    yellow <= false
+    red <= true
+end
+
+intent detect_color()
+    when green do
+        active_color <= green
+    end
+    when yellow do
+        active_color <= yellow
+    end
+    when red do
+        active_color <= red
+    end
+end

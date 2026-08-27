@@ -1,0 +1,13 @@
+intent vote(Voter, Choice)
+    voted[Voter] <= true
+end
+
+intent tally(Choice)
+    when voted[A] do
+        count[Choice] <= true
+    end
+end
+
+intent clear_votes()
+    voted <= false
+end

@@ -1,0 +1,18 @@
+intent propagate(Node)
+    activated[Node] <= true
+    when activated[A] do
+        when connected[A, B] do
+            activated[B] <= true
+        end
+    end
+end
+
+intent link(NodeA, NodeB)
+    connected[NodeA, NodeB] <= true
+    connected[NodeB, NodeA] <= true
+end
+
+intent unlink(NodeA, NodeB)
+    connected[NodeA, NodeB] <= false
+    connected[NodeB, NodeA] <= false
+end

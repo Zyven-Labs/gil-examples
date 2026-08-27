@@ -1,0 +1,7 @@
+intent set_flag(Flag)
+    Flag <= true
+end
+
+intent clear_flag(Flag)
+    Flag <= false
+end

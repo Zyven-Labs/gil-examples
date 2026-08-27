@@ -1,0 +1,9 @@
+intent acquire(Who, Resource)
+    in_use[Resource] <= true
+    owner[Resource, Who] <= true
+end
+
+intent release(Who, Resource)
+    in_use[Resource] <= false
+    owner[Resource, Who] <= false
+end

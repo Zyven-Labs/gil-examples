@@ -1,0 +1,27 @@
+intent befriend(A, B)
+    friends[A, B] <= true
+    friends[B, A] <= true
+end
+
+intent unfriend(A, B)
+    friends[A, B] <= false
+    friends[B, A] <= false
+end
+
+intent suggest_friends(Person)
+    when friends[Person, F] do
+        when friends[F, FoF] do
+            when not friends[Person, FoF] do
+                suggested[Person, FoF] <= true
+            end
+        end
+    end
+end
+
+intent accept_suggestion(Person, Suggested)
+    when suggested[Person, Suggested] do
+        friends[Person, Suggested] <= true
+        friends[Suggested, Person] <= true
+        suggested[Person, Suggested] <= false
+    end
+end

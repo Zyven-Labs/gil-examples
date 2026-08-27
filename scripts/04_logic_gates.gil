@@ -1,0 +1,32 @@
+intent and_gate(InputA, InputB, Out)
+    when InputA and InputB do
+        Out <= true
+    end
+    when not InputA do
+        Out <= false
+    end
+    when not InputB do
+        Out <= false
+    end
+end
+
+intent or_gate(InputA, InputB, Out)
+    when InputA do
+        Out <= true
+    end
+    when InputB do
+        Out <= true
+    end
+    when not InputA and not InputB do
+        Out <= false
+    end
+end
+
+intent not_gate(In, Out)
+    when In do
+        Out <= false
+    end
+    when not In do
+        Out <= true
+    end
+end

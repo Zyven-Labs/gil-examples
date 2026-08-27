@@ -1,0 +1,21 @@
+intent connect_rooms(RoomA, RoomB)
+    exit[RoomA, RoomB] <= true
+    exit[RoomB, RoomA] <= true
+end
+
+intent go(Player, From, To)
+    when location[Player, From] and exit[From, To] do
+        location[Player, From] <= false
+        location[Player, To] <= true
+    end
+end
+
+intent spawn(Player, Room)
+    location[Player, Room] <= true
+end
+
+intent look_around(Player)
+    when location[Player, Room] and exit[Room, Exit] do
+        visible_exit[Player, Exit] <= true
+    end
+end

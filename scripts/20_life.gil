@@ -1,0 +1,13 @@
+intent set_cell(X, Y)
+    cell[X, Y] <= true
+end
+
+intent clear_cell(X, Y)
+    cell[X, Y] <= false
+end
+
+intent neighbors(X, Y)
+    when cell[Xp, Yp] do
+        neighbor_of[X, Y, Xp, Yp] <= true
+    end
+end

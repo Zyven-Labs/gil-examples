@@ -1,0 +1,13 @@
+intent register(User)
+    user[User] <= true
+end
+
+intent grant_permission(User, Action)
+    permission[User, Action] <= true
+end
+
+intent check_access(User, Action)
+    when user[User] and permission[User, Action] do
+        allowed[User, Action] <= true
+    end
+end

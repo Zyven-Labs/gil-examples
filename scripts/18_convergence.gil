@@ -1,0 +1,19 @@
+intent set_source(Node)
+    source[Node] <= true
+end
+
+intent amplify()
+    when source[A] do
+        when linked[A, B] do
+            activated[B] <= true
+        end
+    end
+end
+
+intent cascade()
+    when activated[A] do
+        when linked[A, B] do
+            activated[B] <= true
+        end
+    end
+end

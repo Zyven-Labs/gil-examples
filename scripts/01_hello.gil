@@ -1,0 +1,7 @@
+intent say_hello()
+    greeting <= true
+end
+
+intent say_goodbye()
+    greeting <= false
+end

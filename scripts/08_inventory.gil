@@ -1,0 +1,7 @@
+intent pickup(Who, What)
+    carries[Who, What] <= true
+end
+
+intent drop(Who, What)
+    carries[Who, What] <= false
+end

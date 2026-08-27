@@ -1,0 +1,7 @@
+intent turn_on()
+    lit <= true
+end
+
+intent turn_off()
+    lit <= false
+end

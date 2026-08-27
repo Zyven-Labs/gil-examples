@@ -1,0 +1,25 @@
+intent trigger(Sensor)
+    triggered[Sensor] <= true
+end
+
+intent arm()
+    armed <= true
+end
+
+intent disarm()
+    armed <= false
+end
+
+intent propagate_alarm()
+    when armed and triggered[S] do
+        when linked[S, T] do
+            triggered[T] <= true
+        end
+        alarm[S] <= true
+    end
+end
+
+intent link_sensors(SensorA, SensorB)
+    linked[SensorA, SensorB] <= true
+    linked[SensorB, SensorA] <= true
+end

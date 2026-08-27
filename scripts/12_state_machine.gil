@@ -1,0 +1,19 @@
+intent set_state(State)
+    active[State] <= true
+    when active[S] do
+        S <= false
+    end
+end
+
+intent transition(From, To)
+    when From do
+        From <= false
+        To <= true
+    end
+end
+
+intent reset()
+    when active[S] do
+        S <= false
+    end
+end

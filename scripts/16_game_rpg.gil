@@ -1,0 +1,13 @@
+intent damage(Target)
+    healthy[Target] <= false
+end
+
+intent heal(Target)
+    healthy[Target] <= true
+end
+
+intent is_alive(Who)
+    when healthy[Who] do
+        alive[Who] <= true
+    end
+end
