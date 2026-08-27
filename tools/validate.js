@@ -227,6 +227,98 @@ if (scripts['14_resource_alloc.gil']) {
     });
 }
 
+if (scripts['09_voting.gil']) {
+    test('09_voting vote and tally', function() {
+        var s = scripts['09_voting.gil'].script;
+        var f = new Frontier();
+
+        var vote = s.intent('vote');
+        assert(vote !== undefined, 'vote intent not found');
+        vote.execute(f, ['alice', 'ham']);
+        vote.execute(f, ['bob',   'ham']);
+        vote.execute(f, ['carol', 'spam']);
+
+        assertVal(f.get('voted', ['alice', 'ham']),   GIL.TRUE, 'voted[alice, ham]');
+        assertVal(f.get('voted', ['bob',   'ham']),   GIL.TRUE, 'voted[bob, ham]');
+        assertVal(f.get('voted', ['carol', 'spam']),  GIL.TRUE, 'voted[carol, spam]');
+
+        var tally = s.intent('tally');
+        assert(tally !== undefined, 'tally intent not found');
+        tally.execute(f);
+
+        assertVal(f.get('ballot_for', ['ham',  'alice']), GIL.TRUE, 'ballot_for[ham, alice]');
+        assertVal(f.get('ballot_for', ['ham',  'bob']),   GIL.TRUE, 'ballot_for[ham, bob]');
+        assertVal(f.get('ballot_for', ['spam', 'carol']), GIL.TRUE, 'ballot_for[spam, carol]');
+
+        var results = s.intent('results');
+        assert(results !== undefined, 'results intent not found');
+        results.execute(f);
+
+        assertVal(f.get('received_votes', ['ham']),  GIL.TRUE, 'received_votes[ham]');
+        assertVal(f.get('received_votes', ['spam']), GIL.TRUE, 'received_votes[spam]');
+    });
+}
+
+if (scripts['12_state_machine.gil']) {
+    test('12_state_machine transitions', function() {
+        var s = scripts['12_state_machine.gil'].script;
+        var f = new Frontier();
+
+        var set_state = s.intent('set_state');
+        assert(set_state !== undefined, 'set_state intent not found');
+        set_state.execute(f, ['idle']);
+        assertVal(f.get('active', ['idle']), GIL.TRUE, 'active[idle] after set_state');
+
+        var transition = s.intent('transition');
+        assert(transition !== undefined, 'transition intent not found');
+        transition.execute(f, ['idle', 'running']);
+        assertVal(f.get('active', ['idle']),    GIL.FALSE, 'active[idle] after transition');
+        assertVal(f.get('active', ['running']), GIL.TRUE,  'active[running] after transition');
+    });
+}
+
+if (scripts['19_battleship.gil']) {
+    test('19_battleship damage detection', function() {
+        var s = scripts['19_battleship.gil'].script;
+        var f = new Frontier();
+
+        var place  = s.intent('place_ship');
+        var fire   = s.intent('fire_at');
+        var damage = s.intent('check_damage');
+
+        place.execute(f, ['carrier', '3', '5']);
+        place.execute(f, ['carrier', '4', '5']);
+
+        fire.execute(f, ['3', '5']);
+        assertVal(f.get('hit', ['carrier', '3', '5']), GIL.TRUE, 'hit[carrier, 3, 5]');
+        assertVal(f.get('hit', ['carrier', '4', '5']), GIL.FALSE, 'not hit[carrier, 4, 5]');
+
+        damage.execute(f, ['carrier']);
+        assertVal(f.get('damaged', ['carrier']), GIL.TRUE, 'damaged[carrier]');
+    });
+}
+
+if (scripts['20_life.gil']) {
+    test('20_life adjacency-based neighbors', function() {
+        var s = scripts['20_life.gil'].script;
+        var f = new Frontier();
+
+        var set_cell  = s.intent('set_cell');
+        var link_adj  = s.intent('link_adjacent');
+        var neighbors = s.intent('neighbors');
+
+        set_cell.execute(f, ['0', '0']);
+        set_cell.execute(f, ['1', '1']);
+
+        link_adj.execute(f, ['0', '1']);
+        link_adj.execute(f, ['1', '0']);
+
+        neighbors.execute(f, ['0', '0']);
+        assertVal(f.get('neighbor_of', ['0', '0', '1', '1']), GIL.TRUE, 'neighbor_of[0,0,1,1]');
+        assertVal(f.get('neighbor_of', ['0', '0', '0', '0']), GIL.FALSE, 'not neighbor_of[0,0,0,0]');
+    });
+}
+
 // ---------------------------------------------------------------------------
 // Results
 // ---------------------------------------------------------------------------

@@ -73,10 +73,11 @@ gil> get greeting
 - `drop(Who, What)` — sets `carries[Who, What]` to false
 
 ### 09 — voting.gil
-**Concept:** Ballot collection
-- `vote(Voter, Choice)` — records vote and ballot choice
-- `tally(Choice)` — counts ballots for the given choice
-- `clear_votes()` — resets all votes
+**Concept:** Ballot recording with pattern-matched tally
+- `vote(Voter, Choice)` — records `voted[Voter, Choice]`
+- `tally()` — derives `ballot_for[Choice, Voter]` from recorded votes via pattern matching
+- `results(Choice)` — detects whether a choice received any votes (`received_votes[Choice]`)
+- `clear_votes()` — resets all voting state
 
 ### 10 — pathfinder.gil
 **Concept:** Graph reachability via convergence (BFS)
@@ -93,15 +94,15 @@ This is the canonical Gil convergence example from the spec.
 - `link_sensors(A, B)` — creates bidirectional links
 
 ### 12 — state_machine.gil
-**Concept:** Generic finite state machine
-- `set_state(State)` — activates state, deactivates others
-- `transition(From, To)` — moves from one state to another
-- `reset()` — deactivates all states
+**Concept:** Generic state machine with activated-state tracking
+- `set_state(State)` — sets `active[State]` to true
+- `transition(From, To)` — when `active[From]`, deactivates it and activates `To`
+- `reset()` — deactivates all states via `when active[S]`
 
 ### 13 — social_graph.gil
-**Concept:** Friend-of-friend suggestions
+**Concept:** Friend-of-friend suggestions (three-valued-logic aware)
 - `befriend(A, B)` / `unfriend(A, B)` — manage friendships
-- `suggest_friends(Person)` — finds friends-of-friends not already friends
+- `suggest_friends(Person)` — suggests friends-of-friends (avoids `not` on unknown values, which fails in three-valued logic)
 - `accept_suggestion(Person, Suggested)` — converts suggestion to friendship
 
 ### 14 — resource_alloc.gil
@@ -135,17 +136,18 @@ This is the canonical Gil convergence example from the spec.
 - `cascade()` — continues activation propagation through linked neighbors
 
 ### 19 — battleship.gil
-**Concept:** Targeting and hit detection
-- `place_ship(Ship, X, Y)` — positions a ship
+**Concept:** Targeting and damage detection
+- `place_ship(Ship, X, Y)` — positions a ship at a coordinate
 - `fire_at(X, Y)` — fires a shot, checks for hits
-- `check_sunk(Ship)` — detects if all ship positions are hit
+- `check_damage(Ship)` — detects if the ship has been hit (three-valued logic limits "all positions sunk" detection without arithmetic extensions)
 - `hit_ship(X, Y)` — marks a hit at a position
 
 ### 20 — life.gil
-**Concept:** Cellular automaton neighbor detection
+**Concept:** Adjacency-based neighbor detection
 - `set_cell(X, Y)` — marks a cell as alive
 - `clear_cell(X, Y)` — marks a cell as dead
-- `neighbors(X, Y)` — discovers all neighboring cells via pattern matching
+- `link_adjacent(CellA, CellB)` — declares two coordinates as adjacent (maps a grid topology)
+- `neighbors(X, Y)` — discovers all neighboring cells via `adjacent` predicates on both axes
 
 ---
 

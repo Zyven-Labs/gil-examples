@@ -1,13 +1,21 @@
 intent vote(Voter, Choice)
-    voted[Voter] <= true
+    voted[Voter, Choice] <= true
 end
 
-intent tally(Choice)
-    when voted[A] do
-        count[Choice] <= true
+intent tally()
+    when voted[Voter, Choice] do
+        ballot_for[Choice, Voter] <= true
+    end
+end
+
+intent results(Choice)
+    when ballot_for[Choice, Voter] do
+        received_votes[Choice] <= true
     end
 end
 
 intent clear_votes()
     voted <= false
+    ballot_for <= false
+    received_votes <= false
 end

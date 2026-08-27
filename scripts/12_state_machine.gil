@@ -1,19 +1,16 @@
 intent set_state(State)
     active[State] <= true
-    when active[S] do
-        S <= false
-    end
 end
 
 intent transition(From, To)
-    when From do
-        From <= false
-        To <= true
+    when active[From] do
+        active[From] <= false
+        active[To] <= true
     end
 end
 
 intent reset()
     when active[S] do
-        S <= false
+        active[S] <= false
     end
 end

@@ -6,8 +6,17 @@ intent clear_cell(X, Y)
     cell[X, Y] <= false
 end
 
+intent link_adjacent(CellA, CellB)
+    adjacent[CellA, CellB] <= true
+    adjacent[CellB, CellA] <= true
+end
+
 intent neighbors(X, Y)
     when cell[Xp, Yp] do
-        neighbor_of[X, Y, Xp, Yp] <= true
+        when adjacent[Xp, X] do
+            when adjacent[Yp, Y] do
+                neighbor_of[X, Y, Xp, Yp] <= true
+            end
+        end
     end
 end

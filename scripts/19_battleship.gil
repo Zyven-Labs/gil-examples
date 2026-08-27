@@ -9,10 +9,10 @@ intent fire_at(X, Y)
     end
 end
 
-intent check_sunk(Ship)
+intent check_damage(Ship)
     when ship_at[Ship, X, Y] do
         when hit[Ship, X, Y] do
-            sunk[Ship] <= true
+            damaged[Ship] <= true
         end
     end
 end

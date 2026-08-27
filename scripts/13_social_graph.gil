@@ -11,9 +11,7 @@ end
 intent suggest_friends(Person)
     when friends[Person, F] do
         when friends[F, FoF] do
-            when not friends[Person, FoF] do
-                suggested[Person, FoF] <= true
-            end
+            suggested[Person, FoF] <= true
         end
     end
 end
