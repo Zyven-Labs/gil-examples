@@ -3,17 +3,21 @@ intent set_source(Node)
 end
 
 intent amplify()
-    when source[A] do
-        when linked[A, B] do
-            activated[B] <= true
+    repeat
+        when source[A] do
+            when linked[A, B] do
+                activated[B] <= true
+            end
         end
     end
 end
 
 intent cascade()
-    when activated[A] do
-        when linked[A, B] do
-            activated[B] <= true
+    repeat
+        when activated[A] do
+            when linked[A, B] do
+                activated[B] <= true
+            end
         end
     end
 end

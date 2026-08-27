@@ -12,7 +12,7 @@
 
 const fs   = require('fs');
 const path = require('path');
-const { Script, Frontier, GIL } = require('@zyven/giljs');
+const { Script, Frontier, GIL } = require(path.resolve(__dirname, '..', '..', 'giljs'));
 
 const scriptPath = path.resolve(process.cwd(), process.argv[2]);
 const source  = fs.readFileSync(scriptPath, 'utf8');

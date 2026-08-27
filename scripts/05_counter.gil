@@ -1,4 +1,10 @@
 intent reset()
+    when count[N] do
+        count[N] <= false
+    end
+end
+
+intent init()
     count[0] <= true
 end
 

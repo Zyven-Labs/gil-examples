@@ -1,8 +1,10 @@
 intent propagate(Node)
     activated[Node] <= true
-    when activated[A] do
-        when connected[A, B] do
-            activated[B] <= true
+    repeat
+        when activated[A] do
+            when connected[A, B] do
+                activated[B] <= true
+            end
         end
     end
 end

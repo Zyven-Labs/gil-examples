@@ -11,11 +11,13 @@ intent disarm()
 end
 
 intent propagate_alarm()
-    when armed and triggered[S] do
-        when linked[S, T] do
-            triggered[T] <= true
+    repeat
+        when armed and triggered[S] do
+            when linked[S, T] do
+                triggered[T] <= true
+            end
+            alarm[S] <= true
         end
-        alarm[S] <= true
     end
 end
 

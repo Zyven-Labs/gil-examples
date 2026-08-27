@@ -214,10 +214,10 @@ if (scripts['05_counter.gil']) {
         var s = scripts['05_counter.gil'].script;
         var f = new Frontier();
 
-        var reset = s.intent('reset');
-        assert(reset !== undefined, 'reset intent not found');
-        reset.execute(f);
-        assertVal(f.get('count', ['0']), GIL.TRUE, 'count[0] after reset');
+        var init = s.intent('init');
+        assert(init !== undefined, 'init intent not found');
+        init.execute(f);
+        assertVal(f.get('count', ['0']), GIL.TRUE, 'count[0] after init');
 
         var inc = s.intent('inc');
         assert(inc !== undefined, 'inc intent not found');
