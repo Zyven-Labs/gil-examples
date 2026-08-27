@@ -1,7 +1,8 @@
-intent set_flag(Flag)
-    Flag <= true
+intent reset()
+    count[0] <= true
 end
 
-intent clear_flag(Flag)
-    Flag <= false
+intent inc(N)
+    count[N] <= false
+    count[N + 1] <= true
 end

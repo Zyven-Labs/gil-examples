@@ -49,9 +49,16 @@ gil> get greeting
 - `not_gate(In, Out)` — inverts the input
 
 ### 05 — counter.gil
-**Concept:** Flag management with arbitrary predicates
-- `set_flag(Flag)` — sets the given predicate to `true`
-- `clear_flag(Flag)` — sets the given predicate to `false`
+**Concept:** Integer counter with arithmetic
+- `reset()` — sets `count[0]` to true
+- `inc(N)` — atomically decrements `count[N]` and increments `count[N + 1]`
+
+```sh
+node repl.js scripts/05_counter.gil
+gil> intent reset
+gil> intent inc 0
+gil> get count 1
+```
 
 ### 06 — access_control.gil
 **Concept:** Guarded access with authorization checks
@@ -68,9 +75,11 @@ gil> get greeting
 - `detect_color()` — reflects the active color into `active_color`
 
 ### 08 — inventory.gil
-**Concept:** Item management
+**Concept:** Item management with quantity tracking via integer arithmetic
 - `pickup(Who, What)` — sets `carries[Who, What]` to true
 - `drop(Who, What)` — sets `carries[Who, What]` to false
+- `set_count(Who, What, N)` — when carrying, sets `item_count[Who, What, N]` to true
+- `add_one(Who, What, N)` — when carrying, replaces `item_count[Who, What, N]` with `item_count[Who, What, N + 1]`
 
 ### 09 — voting.gil
 **Concept:** Ballot recording with pattern-matched tally
@@ -106,9 +115,10 @@ This is the canonical Gil convergence example from the spec.
 - `accept_suggestion(Person, Suggested)` — converts suggestion to friendship
 
 ### 14 — resource_alloc.gil
-**Concept:** Mutual exclusion with ownership
+**Concept:** Resource allocation with integer priority levels
 - `acquire(Who, Resource)` — claims resource, sets `in_use[Resource]` and `owner[Resource, Who]`
 - `release(Who, Resource)` — releases resource if owner
+- `set_priority(Resource, N)` — when acquired, assigns integer priority level `N`
 
 ### 15 — auth.gil
 **Concept:** User registration and permission checks
@@ -136,18 +146,18 @@ This is the canonical Gil convergence example from the spec.
 - `cascade()` — continues activation propagation through linked neighbors
 
 ### 19 — battleship.gil
-**Concept:** Targeting and damage detection
+**Concept:** Targeting, damage detection, and sector mapping via integer arithmetic
 - `place_ship(Ship, X, Y)` — positions a ship at a coordinate
 - `fire_at(X, Y)` — fires a shot, checks for hits
-- `check_damage(Ship)` — detects if the ship has been hit (three-valued logic limits "all positions sunk" detection without arithmetic extensions)
+- `check_damage(Ship)` — detects if the ship has been hit
 - `hit_ship(X, Y)` — marks a hit at a position
+- `sector_report(Ship)` — derives sector coordinates `X / 2, Y / 2` from hit positions (integer division folding)
 
 ### 20 — life.gil
-**Concept:** Adjacency-based neighbor detection
+**Concept:** Grid cell shift via integer arithmetic on coordinates
 - `set_cell(X, Y)` — marks a cell as alive
 - `clear_cell(X, Y)` — marks a cell as dead
-- `link_adjacent(CellA, CellB)` — declares two coordinates as adjacent (maps a grid topology)
-- `neighbors(X, Y)` — discovers all neighboring cells via `adjacent` predicates on both axes
+- `shift(Dx, Dy)` — moves every live cell by `(Dx, Dy)`, computing `X + Dx, Y + Dy` with integer arithmetic
 
 ---
 

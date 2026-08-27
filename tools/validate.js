@@ -209,17 +209,65 @@ if (scripts['13_social_graph.gil']) {
     });
 }
 
+if (scripts['05_counter.gil']) {
+    test('05_counter integer increment', function() {
+        var s = scripts['05_counter.gil'].script;
+        var f = new Frontier();
+
+        var reset = s.intent('reset');
+        assert(reset !== undefined, 'reset intent not found');
+        reset.execute(f);
+        assertVal(f.get('count', ['0']), GIL.TRUE, 'count[0] after reset');
+
+        var inc = s.intent('inc');
+        assert(inc !== undefined, 'inc intent not found');
+        inc.execute(f, ['0']);
+        assertVal(f.get('count', ['0']), GIL.FALSE, 'count[0] after inc');
+        assertVal(f.get('count', ['1']), GIL.TRUE, 'count[1] after inc');
+
+        inc.execute(f, ['1']);
+        assertVal(f.get('count', ['1']), GIL.FALSE, 'count[1] after second inc');
+        assertVal(f.get('count', ['2']), GIL.TRUE, 'count[2] after second inc');
+    });
+}
+
+if (scripts['08_inventory.gil']) {
+    test('08_inventory count_item and add_one', function() {
+        var s = scripts['08_inventory.gil'].script;
+        var f = new Frontier();
+
+        var pickup = s.intent('pickup');
+        assert(pickup !== undefined, 'pickup intent not found');
+        pickup.execute(f, ['alice', 'apple']);
+
+        var set_count = s.intent('set_count');
+        assert(set_count !== undefined, 'set_count intent not found');
+        set_count.execute(f, ['alice', 'apple', '1']);
+        assertVal(f.get('item_count', ['alice', 'apple', '1']), GIL.TRUE, 'item_count[alice,apple,1]');
+
+        var add_one = s.intent('add_one');
+        assert(add_one !== undefined, 'add_one intent not found');
+        add_one.execute(f, ['alice', 'apple', '1']);
+        assertVal(f.get('item_count', ['alice', 'apple', '1']), GIL.FALSE, 'item_count[alice,apple,1] after add_one');
+        assertVal(f.get('item_count', ['alice', 'apple', '2']), GIL.TRUE, 'item_count[alice,apple,2] after add_one');
+    });
+}
+
 if (scripts['14_resource_alloc.gil']) {
-    test('14_resource_alloc acquire/release', function() {
+    test('14_resource_alloc acquire/release/priority', function() {
         var s = scripts['14_resource_alloc.gil'].script;
         var f = new Frontier();
 
         var acquire = s.intent('acquire');
         var release = s.intent('release');
+        var set_priority = s.intent('set_priority');
 
         acquire.execute(f, ['alice', 'printer']);
         assertVal(f.get('in_use', ['printer']), GIL.TRUE, 'in_use[printer]');
         assertVal(f.get('owner', ['printer', 'alice']), GIL.TRUE, 'owner[printer, alice]');
+
+        set_priority.execute(f, ['printer', '3']);
+        assertVal(f.get('priority', ['printer', '3']), GIL.TRUE, 'priority[printer, 3]');
 
         release.execute(f, ['alice', 'printer']);
         assertVal(f.get('in_use', ['printer']), GIL.FALSE, 'in_use after release');
@@ -279,13 +327,14 @@ if (scripts['12_state_machine.gil']) {
 }
 
 if (scripts['19_battleship.gil']) {
-    test('19_battleship damage detection', function() {
+    test('19_battleship damage detection and sector report', function() {
         var s = scripts['19_battleship.gil'].script;
         var f = new Frontier();
 
         var place  = s.intent('place_ship');
         var fire   = s.intent('fire_at');
         var damage = s.intent('check_damage');
+        var sector = s.intent('sector_report');
 
         place.execute(f, ['carrier', '3', '5']);
         place.execute(f, ['carrier', '4', '5']);
@@ -296,27 +345,31 @@ if (scripts['19_battleship.gil']) {
 
         damage.execute(f, ['carrier']);
         assertVal(f.get('damaged', ['carrier']), GIL.TRUE, 'damaged[carrier]');
+
+        sector.execute(f, ['carrier']);
+        assertVal(f.get('sector_hit', ['carrier', '1', '2']), GIL.TRUE, 'sector_hit[carrier, 3/2=1, 5/2=2]');
     });
 }
 
 if (scripts['20_life.gil']) {
-    test('20_life adjacency-based neighbors', function() {
+    test('20_life cell shift with integer arithmetic', function() {
         var s = scripts['20_life.gil'].script;
         var f = new Frontier();
 
         var set_cell  = s.intent('set_cell');
-        var link_adj  = s.intent('link_adjacent');
-        var neighbors = s.intent('neighbors');
+        var shift     = s.intent('shift');
 
         set_cell.execute(f, ['0', '0']);
-        set_cell.execute(f, ['1', '1']);
+        set_cell.execute(f, ['5', '3']);
+        assertVal(f.get('cell', ['0', '0']), GIL.TRUE, 'cell[0,0]');
+        assertVal(f.get('cell', ['5', '3']), GIL.TRUE, 'cell[5,3]');
 
-        link_adj.execute(f, ['0', '1']);
-        link_adj.execute(f, ['1', '0']);
+        shift.execute(f, ['1', '0']);
 
-        neighbors.execute(f, ['0', '0']);
-        assertVal(f.get('neighbor_of', ['0', '0', '1', '1']), GIL.TRUE, 'neighbor_of[0,0,1,1]');
-        assertVal(f.get('neighbor_of', ['0', '0', '0', '0']), GIL.FALSE, 'not neighbor_of[0,0,0,0]');
+        assertVal(f.get('cell', ['0', '0']), GIL.FALSE, 'cell[0,0] after shift');
+        assertVal(f.get('cell', ['5', '3']), GIL.FALSE, 'cell[5,3] after shift');
+        assertVal(f.get('shifted', ['1', '0']), GIL.TRUE, 'shifted[1,0] from cell[0,0]+(1,0)');
+        assertVal(f.get('shifted', ['6', '3']), GIL.TRUE, 'shifted[6,3] from cell[5,3]+(1,0)');
     });
 }
 

@@ -5,3 +5,16 @@ end
 intent drop(Who, What)
     carries[Who, What] <= false
 end
+
+intent set_count(Who, What, N)
+    when carries[Who, What] do
+        item_count[Who, What, N] <= true
+    end
+end
+
+intent add_one(Who, What, N)
+    when carries[Who, What] do
+        item_count[Who, What, N] <= false
+        item_count[Who, What, N + 1] <= true
+    end
+end

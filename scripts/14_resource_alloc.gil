@@ -7,3 +7,9 @@ intent release(Who, Resource)
     in_use[Resource] <= false
     owner[Resource, Who] <= false
 end
+
+intent set_priority(Resource, N)
+    when in_use[Resource] do
+        priority[Resource, N] <= true
+    end
+end

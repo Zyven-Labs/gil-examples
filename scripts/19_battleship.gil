@@ -22,3 +22,9 @@ intent hit_ship(X, Y)
         hit[S, X, Y] <= true
     end
 end
+
+intent sector_report(Ship)
+    when hit[Ship, X, Y] do
+        sector_hit[Ship, X / 2, Y / 2] <= true
+    end
+end
