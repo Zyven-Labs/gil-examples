@@ -252,9 +252,10 @@ if (scripts['09_voting.gil']) {
 
         var results = s.intent('results');
         assert(results !== undefined, 'results intent not found');
-        results.execute(f);
+        results.execute(f, ['ham']);
 
         assertVal(f.get('received_votes', ['ham']),  GIL.TRUE, 'received_votes[ham]');
+        results.execute(f, ['spam']);
         assertVal(f.get('received_votes', ['spam']), GIL.TRUE, 'received_votes[spam]');
     });
 }
