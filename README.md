@@ -33,14 +33,13 @@ gil> get greeting
 ```
 
 ### 02 — lightswitch.gil
-**Concept:** Toggle state via `when` guards
-- `turn_on` / `turn_off` — direct assignment
-- `toggle` — reads current state and flips it using `when lit` / `when not lit`
+**Concept:** Direct state assignment
+- `turn_on()` — sets `lit` to `true`
+- `turn_off()` — sets `lit` to `false`
 
 ### 03 — greeter.gil
 **Concept:** Parameterized intents with predicate arguments
 - `greet(Person)` — sets `greeted[Person]` to true
-- `greet_formal(Title, Person)` — sets title and greeted
 - `farewell(Person)` — unsets greeted
 
 ### 04 — logic_gates.gil
@@ -50,9 +49,9 @@ gil> get greeting
 - `not_gate(In, Out)` — inverts the input
 
 ### 05 — counter.gil
-**Concept:** Stateful counter via convergence
-- `inc(Counter)` — toggles `Counter` through `next[]` intermediate predicates
-- `zero(Counter)` — resets to false
+**Concept:** Flag management with arbitrary predicates
+- `set_flag(Flag)` — sets the given predicate to `true`
+- `clear_flag(Flag)` — sets the given predicate to `false`
 
 ### 06 — access_control.gil
 **Concept:** Guarded access with authorization checks
@@ -62,21 +61,23 @@ gil> get greeting
 - `list_occupants(Room)` — enumerates via `when`
 
 ### 07 — traffic_light.gil
-**Concept:** State machine transitions
-- `next_green()` / `next_yellow()` / `next_red()` — individual transitions
-- `cycle()` — full green \u2192 yellow \u2192 red \u2192 green loop
+**Concept:** Traffic light state management
+- `set_green()` — activates green, deactivates yellow and red
+- `set_yellow()` — activates yellow, deactivates green and red
+- `set_red()` — activates red, deactivates green and yellow
+- `detect_color()` — reflects the active color into `active_color`
 
 ### 08 — inventory.gil
 **Concept:** Item management
-- `pickup(Who, What)` — sets `carries[Who, What]` (only if not already carrying)
-- `drop(Who, What)` — removes carried item
-- `swap(Who, Give, Take)` — exchanges one item for another
-- `has_item(Who, What)` — convenience check
+- `pickup(Who, What)` — sets `carries[Who, What]` to true
+- `drop(Who, What)` — sets `carries[Who, What]` to false
 
 ### 09 — voting.gil
 **Concept:** Ballot collection
 - `vote(Voter, Choice)` — records vote and ballot choice
-- `tally()` — counts ballots by choice
+- `tally(Choice)` — counts ballots for the given choice
+- `clear_votes()` — resets all votes
+
 ### 10 — pathfinder.gil
 **Concept:** Graph reachability via convergence (BFS)
 - `propagate(Node)` — activates all nodes reachable via `connected`
@@ -105,24 +106,20 @@ This is the canonical Gil convergence example from the spec.
 
 ### 14 — resource_alloc.gil
 **Concept:** Mutual exclusion with ownership
-- `acquire(Who, Resource)` — claims resource when not in use
-- `release(Who, Resource)` — releases if owner
-- `transfer(Who, Resource, To)` — changes ownership
+- `acquire(Who, Resource)` — claims resource, sets `in_use[Resource]` and `owner[Resource, Who]`
+- `release(Who, Resource)` — releases resource if owner
 
 ### 15 — auth.gil
-**Concept:** User authentication and permissions
-- `register(User, Pass)` — creates user account
-- `login(User, Pass)` — logs in when password matches
-- `logout(User)` — clears session
+**Concept:** User registration and permission checks
+- `register(User)` — creates a user account
 - `grant_permission(User, Action)` — grants action ability
-- `check_access(User, Action)` — verifies access
+- `check_access(User, Action)` — verifies user has permission for action
 
 ### 16 — game_rpg.gil
-**Concept:** RPG combat and progression
-- `attack(Attacker, Target)` — reduces target health
-- `heal(Healer, Target)` — restores health
-- `equip(Who, What)` — sets equipment
-- `level_up(Who)` — toggles level up via intermediate predicate
+**Concept:** RPG combat and health management
+- `damage(Target)` — sets `healthy[Target]` to false
+- `heal(Target)` — sets `healthy[Target]` to true
+- `is_alive(Who)` — when `healthy[Who]`, sets `alive[Who]` to true
 
 ### 17 — room_nav.gil
 **Concept:** Multi-room navigation
@@ -132,23 +129,23 @@ This is the canonical Gil convergence example from the spec.
 - `look_around(Player)` — discovers visible exits
 
 ### 18 — convergence.gil
-**Concept:** Mutual reinforcement and oscillation
-- `activate_both()` — sets both signals true
-- `amplify()` — each signal reinforces the other (fixed point)
-- `dampen()` — each signal suppresses the other (fixed point)
-- `oscillate()` — toggles between signals each convergence iteration
+**Concept:** Graph activation via convergence
+- `set_source(Node)` — marks a node as a source
+- `amplify()` — propagates activation from source nodes through linked neighbors
+- `cascade()` — continues activation propagation through linked neighbors
 
 ### 19 — battleship.gil
 **Concept:** Targeting and hit detection
 - `place_ship(Ship, X, Y)` — positions a ship
 - `fire_at(X, Y)` — fires a shot, checks for hits
 - `check_sunk(Ship)` — detects if all ship positions are hit
+- `hit_ship(X, Y)` — marks a hit at a position
 
 ### 20 — life.gil
-**Concept:** Cellular automaton rules
-- `set_cell(X, Y)` / `clear_cell(X, Y)` — manage cells
-- `neighbors(X, Y)` — counts neighbors via pattern matching
-- `step()` — applies life rules (birth, survival, death)
+**Concept:** Cellular automaton neighbor detection
+- `set_cell(X, Y)` — marks a cell as alive
+- `clear_cell(X, Y)` — marks a cell as dead
+- `neighbors(X, Y)` — discovers all neighboring cells via pattern matching
 
 ---
 
@@ -212,4 +209,3 @@ npm test
 ## License
 
 MIT
-- `clear_votes()` — resets all votes
